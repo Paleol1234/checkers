@@ -11,6 +11,22 @@ public class JoinLobbyMenu : MonoBehaviour
 
     public void Join()
     {
-        
+        NetworkManager.singleton.networkAddress = addressInput.text;
+        NetworkManager.singleton.StartClient();
     }
+    private void Start()
+    {
+        CheckersNetworkManager.ClientOnConnected += HindleClientConnected;
+    }
+    private void OnDestroy()
+    {
+        CheckersNetworkManager.ClientOnConnected -= HindleClientConnected;
+
+    }
+    void HindleClientConnected()
+    {
+        onlinePage.SetActive(false);
+        gameObject.SetActive(false);
+    }
+
 }
