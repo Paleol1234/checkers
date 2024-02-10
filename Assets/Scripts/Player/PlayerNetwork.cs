@@ -24,6 +24,22 @@ public class PlayerNetwork : Player
             }
             displayName = value;
         }
-    }    
+    }
+
+    [SyncVar]
+    private bool lobyOwner;
+    public bool LobyOwner
+    {
+        get
+        {
+            return lobyOwner;
+        }
+        [Server]
+        set
+        {
+            lobyOwner = value;
+        }
+    }
+
 }
 
