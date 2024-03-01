@@ -1,4 +1,4 @@
-using Mirror;
+﻿using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,5 +13,26 @@ public class LobbyMenu : MonoBehaviour
     public void StartGame()
     {
         
+    }
+    void ClientHandleInfoUpdated()
+    {
+        List<PlayerNetwork> Players = ((CheckersNetworkManager)NetworkManager.singleton).NetworkPlayeers;
+        for(int i =0; i< Players.Count; i++)
+        {
+            playerNameTexts[i].text = Players[i].DisplayName;
+        }
+        for(int i = Players.Count; i<playerNameTexts.Length;i++)
+        {
+            playerNameTexts[i].text = "Ждем игрока";
+        }
+    }
+    private void Start()
+    {
+        PlayerNetwork.ClientOnInfoUpdated += ClientHandleInfoUpdated;
+    }
+    private void OnDestroy()
+    {
+        PlayerNetwork.ClientOnInfoUpdated -= ClientHandleInfoUpdated;
+
     }
 }

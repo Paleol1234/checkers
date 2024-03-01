@@ -7,7 +7,9 @@ using UnityEngine;
 
 public class PlayerNetwork : Player
 {
-    [SyncVar]
+    public static event Action ClientOnInfoUpdated;
+
+    [SyncVar(hook =nameof(ClientHindleDisplayNameUpdated))]
     private string displayName;
     public string DisplayName
     {
@@ -39,6 +41,26 @@ public class PlayerNetwork : Player
         {
             lobyOwner = value;
         }
+    }
+    void ClientHindleDisplayNameUpdated(string oldName, string NewName)
+    {
+        ClientOnInfoUpdated?.Invoke();
+    }
+    public override void OnStartClient()
+    {
+        if (!isClientOnly)
+        {
+            return;
+        }
+        ((CheckersNetworkManager)NetworkManager.singleton).NetworkPlayeers.Add(this);
+    }
+    public override void OnStopClient()
+    {
+        if (!isClientOnly)
+        {
+            ((CheckersNetworkManager)NetworkManager.singleton).NetworkPlayeers.Remove(this);
+        }
+        ClientOnInfoUpdated?.Invoke();
     }
 
 }
