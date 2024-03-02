@@ -1,4 +1,4 @@
-using Mirror;
+﻿using Mirror;
 using Steamworks;
 using System;
 using System.Collections;
@@ -8,6 +8,9 @@ using UnityEngine;
 public class PlayerNetwork : Player
 {
     public static event Action ClientOnInfoUpdated;
+    public static event Action<bool> AuthorityOnLobbyOwnerStateUpdated;
+    //Поля и свойства Start 
+
 
     [SyncVar(hook =nameof(ClientHindleDisplayNameUpdated))]
     private string displayName;
@@ -28,7 +31,7 @@ public class PlayerNetwork : Player
         }
     }
 
-    [SyncVar]
+    [SyncVar(hook = nameof(AuthorityHandleLobbyOwnerStateUpdated))]
     private bool lobyOwner;
     public bool LobyOwner
     {
@@ -42,6 +45,7 @@ public class PlayerNetwork : Player
             lobyOwner = value;
         }
     }
+    //Поля и свойства Finish
     void ClientHindleDisplayNameUpdated(string oldName, string NewName)
     {
         ClientOnInfoUpdated?.Invoke();
@@ -62,6 +66,15 @@ public class PlayerNetwork : Player
         }
         ClientOnInfoUpdated?.Invoke();
     }
+    public void AuthorityHandleLobbyOwnerStateUpdated(bool oldState, bool newState)
+    {
+        if (!hasAuthority)
+        {
+            return;
+        }
+        AuthorityOnLobbyOwnerStateUpdated?.Invoke(newState);
+    }
+
 
 }
 

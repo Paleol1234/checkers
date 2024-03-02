@@ -25,14 +25,21 @@ public class LobbyMenu : MonoBehaviour
         {
             playerNameTexts[i].text = "Ждем игрока";
         }
+        startGameButton.interactable = Players.Count > 1;
     }
     private void Start()
     {
         PlayerNetwork.ClientOnInfoUpdated += ClientHandleInfoUpdated;
+        PlayerNetwork.AuthorityOnLobbyOwnerStateUpdated += AuthorityHandleLoobyOwnerStateUpdated;
     }
     private void OnDestroy()
     {
         PlayerNetwork.ClientOnInfoUpdated -= ClientHandleInfoUpdated;
+        PlayerNetwork.AuthorityOnLobbyOwnerStateUpdated -= AuthorityHandleLoobyOwnerStateUpdated;
 
+    }
+    void AuthorityHandleLoobyOwnerStateUpdated(bool state)
+    {
+        startGameButton.gameObject.SetActive(state);
     }
 }
