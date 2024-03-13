@@ -6,5 +6,12 @@ using UnityEngine;
 
 public class PlayerPiecesHandlerNetworked : PlayerPiecesHandler
 {
-    
+    public override void OnStartServer()
+    {
+        CheckersNetworkManager.ServerOnGameStarted += HandleGameStarted;
+    }
+    public override void OnStopServer()
+    {
+        CheckersNetworkManager.ServerOnGameStarted -= HandleGameStarted;
+    }
 }

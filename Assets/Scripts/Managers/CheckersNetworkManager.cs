@@ -8,12 +8,23 @@ using UnityEngine.SceneManagement;
 
 public class CheckersNetworkManager : NetworkManager
 {
+    //Поля
     [SerializeField] GameObject gameOverHandlerPrefab, boardPrefab, 
         turnsHandlerPrefab;
-
+    //События
     public static event Action ClientOnConnected;
+    public static event Action ServerOnGameStarted;
+    //свойства
     public List<PlayerNetwork> NetworkPlayeers { get; } = new List<PlayerNetwork>();
-
+    //методы
+    public override void OnStartServer()
+    {
+        GameObject boardInstance = Instantiate(boardPrefab);
+        NetworkServer.Spawn(boardInstance);
+        GameObject turnsHandlerInstance = Instantiate(turnsHandlerPrefab);
+        NetworkServer.Spawn(turnsHandlerInstance);
+    }
+    
     public override void OnClientConnect()
     {
         base.OnClientConnect();
@@ -44,6 +55,16 @@ public class CheckersNetworkManager : NetworkManager
     public override void OnStopServer()
     {
         NetworkPlayeers.Clear();
+    }
+    public override void OnServerSceneChanged(string sceneName)
+    {
+        if (sceneName.StartsWith("Game"))
+        {
+            GameObject gameOverhandleInstance = Instantiate(turnsHandlerPrefab);
+            NetworkServer.Spawn(gameOverhandleInstance);
+            ServerOnGameStarted?.Invoke();
+        }
+
     }
 
 }
