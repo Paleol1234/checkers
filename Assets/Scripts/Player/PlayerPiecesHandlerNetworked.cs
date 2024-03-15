@@ -10,6 +10,11 @@ public class PlayerPiecesHandlerNetworked : PlayerPiecesHandler
     {
         CheckersNetworkManager.ServerOnGameStarted += HandleGameStarted;
     }
+    protected override void Spawn(GameObject prefab, int xPos, int zPos)
+    {
+        base.Spawn(prefab, xPos, zPos);
+        NetworkServer.Spawn(instanceToSpawn,connectionToClient);
+    }
     public override void OnStopServer()
     {
         CheckersNetworkManager.ServerOnGameStarted -= HandleGameStarted;

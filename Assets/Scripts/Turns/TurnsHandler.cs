@@ -1,4 +1,4 @@
-using Mirror;
+п»їusing Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class TurnsHandler : NetworkBehaviour
 {
-    protected const string DRAW = "Ничья!";
-    protected const string WHITE_WIN = "Победитель: Светлый!";
-    protected const string BLACK_WIN = "Победитель: Тёмный!";
+    protected const string DRAW = "РќРёС‡СЊСЏ!";
+    protected const string WHITE_WIN = "РџРѕР±РµРґРёС‚РµР»СЊ: РЎРІРµС‚Р»С‹Р№!";
+    protected const string BLACK_WIN = "РџРѕР±РµРґРёС‚РµР»СЊ: РўС‘РјРЅС‹Р№";
 
     public bool WhiteTurn { get; protected set; }
     public List<Move> Moves { get; protected set; } = new List<Move>();
@@ -17,6 +17,7 @@ public class TurnsHandler : NetworkBehaviour
 
     public event Action<string> OnGameOver;
     public event Action OnMovesGenerated;
+
 
     #region Singleton
     public static TurnsHandler Instance { get; private set; }
