@@ -20,5 +20,15 @@ public class TurnsHandlerNetworked : TurnsHandler
         }
         GenerateMoves(playerPieces.PiecesParent);
     }
+    public override void OnStartServer()
+    {
+        PlayerPiecesHandler.OnPiecesSpawned += NextTurn;
+        Players = ((CheckersNetworkManager)NetworkManager.singleton).Players;
+    }
+    public override void OnStopServer()
+    {
+        PlayerPiecesHandler.OnPiecesSpawned -= NextTurn;
+
+    }
 }
 
