@@ -31,4 +31,9 @@ public class BoardNetwork : Board
             NetworkClient.connection.identity.GetComponent<PlayerNetwork>().CmdNextTurn();
         }
     }
+    [Server]
+    public override void CaptureOnBoard(Vector2Int piecePosition)
+    {
+        base.CaptureOnBoard(piecePosition);
+    }
 }
