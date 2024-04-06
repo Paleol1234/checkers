@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class BoardNetwork : Board
 {
+    public override event Action<Vector3> OnPieceCaptured;
     readonly SyncList<int[]> boardList = new SyncList<int[]>();
     public override IList<int[]> BoardList {get {return boardList;} }
     public override void OnStartServer()
@@ -34,6 +35,30 @@ public class BoardNetwork : Board
     [Server]
     public override void CaptureOnBoard(Vector2Int piecePosition)
     {
-        base.CaptureOnBoard(piecePosition);
+        Capture(boardList, piecePosition);
+        RpcCaptureOnBoard(piecePosition);
+        OnPieceCaptured?.Invoke(
+            new Vector3(piecePosition.x,0,piecePosition.y));
+    }
+    [ClientRpc]
+    void RpcCaptureOnBoard(Vector2Int piecePostion)
+    {
+        Capture(boardList,piecePostion);
+    }
+    [Server]
+    bool TryPromotePieceOnBoard(PiecePromotionHandler promotedPiece,int x, int z)
+    {
+        PromotePieceOnBoard(boardList, x, z);
+        RpcPromotePieceOnBoard(x, z);
+        return true;
+    }
+    [ClientRpc]
+    void RpcPromotePieceOnBoard(int x, int z)
+    {
+        if (NetworkServer.active)
+        {
+            return;
+        }
+        PromotePieceOnBoard(boardList, x, z);
     }
 }

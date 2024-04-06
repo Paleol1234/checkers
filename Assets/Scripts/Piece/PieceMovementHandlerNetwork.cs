@@ -6,6 +6,16 @@ using UnityEngine;
 
 public class PieceMovementHandlerNetwork : PieceMovementHandler
 {
+    public static event Func<PiecePromotionHandler, int, int, bool> serverOnPieceReachedBackLine;
+    protected override void ReachedBackline(Vector2Int newPosition)
+    {
+        serverOnPieceReachedBackLine?.Invoke(promotionHandler,newPosition.x,newPosition.y);
+    }
+    [Server]
+    bool TryPromodePieceOnBoard(PiecePromotionHandler promotedPiece,int x,int y)
+    {
+        return true;
+    }
     public override void OnStartAuthority()
     {
         TilesSelectionHandler.OnTileSelected += HandleTileSelected;

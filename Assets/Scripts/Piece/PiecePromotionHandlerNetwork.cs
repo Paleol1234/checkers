@@ -6,5 +6,31 @@ using UnityEngine;
 
 public class PiecePromotionHandlerNetwork : PiecePromotionHandler
 {
-    
+    public override void OnStartServer()
+    {
+        PieceMovementHandlerNetwork.serverOnPieceReachedBackLine += TryPromotePiece;
+    }
+    public override void OnStopServer()
+    {
+        PieceMovementHandlerNetwork.serverOnPieceReachedBackLine -= TryPromotePiece;
+    }
+    protected override bool TryPromotePiece(PiecePromotionHandler promotedPiece, int x, int z)
+    {
+        if (!base.TryPromotePiece(promotedPiece, x, z))
+        {
+            return false;
+        }
+        RpcPromotePiece();
+
+        return true;
+    }
+    [ClientRpc]
+    void RpcPromotePiece()
+    {
+        if (NetworkServer.active)
+        {
+            return;
+        }
+        PromotePiece();
+    }
 }
