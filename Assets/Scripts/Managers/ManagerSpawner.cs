@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ManagerSpawner : MonoBehaviour
 {
-    [SerializeField] GameObject localGameManagerPrefab, networkManagerPrefab;
+    public GameObject localGameManagerPrefab, networkManagerPrefab, window;
 
     public void SpawnLocalGameManager()
     {
@@ -15,4 +15,5 @@ public class ManagerSpawner : MonoBehaviour
     {
         Instantiate(networkManagerPrefab);
     }
+
 }

@@ -12,6 +12,11 @@ public class BoardNetwork : Board
     public override void OnStartServer()
     {
         FillBoardList(boardList);
+        PieceMovementHandlerNetwork.serverOnPieceReachedBackLine += TryPromotePieceOnBoard;
+    }
+    public override void OnStopServer()
+    {
+        PieceMovementHandlerNetwork.serverOnPieceReachedBackLine -= TryPromotePieceOnBoard;
     }
     [Server]
     public override void MoveOnBoard(Vector2Int oldPosition, Vector2Int newPosition, bool nextTurn)
